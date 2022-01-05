@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2018-2022 by dream-alpha -->
+<skin>
+	<screen name="TSCCockpitPlayer" flags="wfNoBorder"
+		position="0,825" size="1920,225">
+		<ePixmap alphatest="off" pixmap="skin_default/infobar.png"
+			position="0,0" size="1920,225" zPosition="-1" />
+		<widget name="service_name" position="230,13" size="1100,45"
+			noWrap="1" backgroundColor="background" render="Label"
+			font="Regular;40" transparent="1" />
+		<ePixmap pixmap="skin_default/icons/ico_dolby_off.png"
+			position="1460,40" size="74,35" />
+		<widget pixmap="skin_default/icons/ico_dolby_on.png"
+			position="1460,40" render="Pixmap" size="74,35"
+			source="session.CurrentService" zPosition="1">
+			<convert type="ServiceInfo">IsMultichannel</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<ePixmap pixmap="skin_default/icons/ico_format_off.png"
+			position="1550,40" size="74,35" />
+		<widget pixmap="skin_default/icons/ico_format_on.png"
+			position="1550,40" render="Pixmap" size="74,35"
+			source="session.CurrentService" zPosition="1">
+			<convert type="ServiceInfo">IsWidescreen</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget pixmap="skin_default/icons/ico_hd_off.png"
+			position="1640,40" render="Pixmap" size="74,35"
+			source="session.CurrentService">
+			<convert type="ServiceInfo">VideoWidth</convert>
+			<convert type="ValueRange">0,720</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget pixmap="skin_default/icons/ico_hd_on.png"
+			position="1640,40" render="Pixmap" size="74,35"
+			source="session.CurrentService" zPosition="1">
+			<convert type="ServiceInfo">VideoWidth</convert>
+			<convert type="ValueRange">721,1980</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget pixmap="Default-FHD/skin_default/icons/uhd.svg"
+			position="1640,40" render="Pixmap" size="74,35"
+			source="session.CurrentService" zPosition="1">
+			<convert type="ServiceInfo">VideoWidth</convert>
+			<convert type="ValueRange">2160,3840</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget pixmap="Default-FHD/skin_default/icons/hdr.svg"
+			position="1730,40" render="Pixmap" size="74,35"
+			source="session.CurrentService" zPosition="1">
+			<convert type="ServiceInfo">IsHdr</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget pixmap="skin_default/icons/icon_rec.png"
+			position="1820,40" render="Pixmap" size="74,35"
+			source="session.RecordState">
+			<convert type="ConditionalShowHide">Blink</convert>
+		</widget>
+
+		<ePixmap
+			pixmap="Default-FHD/TimeshiftCockpit/skin/images/timeshift.svg"
+			position="50,80" size="132,132" />
+
+		<widget backgroundColor="background" font="Regular;34"
+			position="230,88" render="Label" size="140,40" source="Service"
+			transparent="1">
+			<convert type="COCServicePosition">Position</convert>
+		</widget>
+
+		<eLabel backgroundColor="grey" position="370,143" size="1330,4" />
+
+		<widget
+			pointer="Default-FHD/TimeshiftCockpit/skin/images/progress.png:1330,0"
+			position="370,140" render="PositionGauge" size="1330,10"
+			source="Service" transparent="1" zPosition="2">
+			<convert type="COCServicePosition">Gauge</convert>
+		</widget>
+		<widget
+			pointer="Default-FHD/TimeshiftCockpit/skin/images/progress_before.png:1330,0"
+			position="370,140" render="PositionGauge" size="1330,10"
+			source="Service" transparent="1" zPosition="3">
+			<convert type="COCBeforeTSPosition">Gauge</convert>
+		</widget>
+		<widget
+			pointer="Default-FHD/TimeshiftCockpit/skin/images/progress_rec.png:1330,0"
+			position="370,140" render="PositionGauge" size="1330,10"
+			source="Service" transparent="1" zPosition="1">
+			<convert type="COCRecordPosition">Gauge</convert>
+		</widget>
+
+		<widget backgroundColor="background" font="Regular;34"
+			halign="right" position="1740,88" render="Label" size="140,40"
+			source="Service" transparent="1">
+			<convert type="COCServicePosition">Remaining</convert>
+		</widget>
+		<widget backgroundColor="background" font="Regular;34"
+			foregroundColor="yellow" halign="center" position="900,160"
+			render="Label" size="300,40" source="Service" transparent="1">
+			<convert type="COCServicePosition">Length</convert>
+		</widget>
+
+		<widget backgroundColor="background" font="Regular;34"
+			position="230,166" render="Label" size="120,40"
+			source="global.CurrentTime" transparent="1">
+			<convert type="ClockToText">Default</convert>
+		</widget>
+
+		<widget backgroundColor="background" font="Regular;34"
+			halign="right" position="1740,166" render="Label" size="140,40"
+			source="Service" transparent="1">
+			<convert type="COCServicePosition">EndTime,ShowNoSeconds</convert>
+		</widget>
+	</screen>
+
+	<screen name="TSCBufferingProgress"
+		backgroundColor="transparent" flags="wfNoBorder"
+		position="center,center" size="100,100">
+		<widget name="pic" position="center,center" size="100,100"
+			alphatest="off" transparent="0" />
+	</screen>
+
+	<screen name="ScreenPVRState" position="910,490" size="100,160" backgroundColor="transparent"
+		flags="wfNoBorder" zPosition="1000">
+		<widget name="state_pic" position="0,0" size="100,100" transparent="1" />
+		<widget backgroundColor="background" name="state" position="0,110" size="100,50"
+			font="Regular;40" halign="center" valign="center" transparent="1" />
+	</screen>
+
+	<!-- DM9xx and Buck Color display -->
+	<screen id="3" name="TSCCockpitPlayerSummary" position="0,0"
+		size="400,240">
+		<ePixmap position="0,0" size="400,240"
+			pixmap="skin_default/display_bg.png" zPosition="-1" />
+		<widget source="parent.lcd_service_name" font="Display;60"
+			halign="center" position="5,5" render="Label" size="390,120"
+			valign="center" transparent="1">
+		</widget>
+		<widget source="Service" render="Progress"
+			position="center,140" size="380,15" borderWidth="1" zPosition="2"
+			pixmap="Default-FHD/TimeshiftCockpit/skin/images/progress_rec_lcd.png"
+			transparent="1">
+			<convert type="COCRecordPosition">Position</convert>
+		</widget>
+		<widget source="Service" render="Progress"
+			position="center,140" size="380,15" borderWidth="1" zPosition="3"
+			pixmap="Default-FHD/TimeshiftCockpit/skin/images/progress_before_lcd.png"
+			transparent="1">
+			<convert type="COCBeforeTSPosition">Position</convert>
+		</widget>
+		<widget position="center,140" render="Progress" size="380,15"
+			borderWidth="1" source="Service" zPosition="2" transparent="1"
+			pixmap="Default-FHD/TimeshiftCockpit/skin/images/progress_lcd.png">
+			<convert type="COCServicePosition">Position</convert>
+		</widget>
+		<widget font="Display;75" valign="center" halign="left"
+			position="5,160" render="Label" size="235,80" source="Service"
+			transparent="1">
+			<convert type="COCServicePosition">EndTime,ShowNoSeconds</convert>
+		</widget>
+		<widget font="Display;75" valign="center" halign="right"
+			position="240,160" render="Label" size="155,80" source="Service"
+			transparent="1">
+			<convert type="COCServicePosition">Remaining,ShowNoSeconds</convert>
+		</widget>
+	</screen>
+
+	<screen id="3" name="TSCBufferingProgressSummary"
+		position="0,0" size="400,240">
+		<ePixmap position="0,0" size="400,240"
+			pixmap="skin_default/display_bg.png" zPosition="-1" />
+		<widget name="lcd_pic" position="150,70" size="100,100"
+			transparent="1" />
+	</screen>
+
+</skin>

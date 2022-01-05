@@ -1,0 +1,89 @@
+#!/usr/bin/python
+# coding=utf-8
+#
+# Copyright (C) 2018-2022 by dream-alpha
+#
+# In case of reuse of this source code please do not remove this copyright.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# For more information on the GNU General Public License see:
+# <http://www.gnu.org/licenses/>.
+
+
+from __init__ import _
+from Debug import logger
+from Components.ActionMap import HelpableActionMap
+from Screens.InfoBarGenerics import InfoBarSeek
+from enigma import eTimer
+from CutListUtils import secondsToPts
+
+
+class CockpitSmartSeek(InfoBarSeek):
+
+	def __init__(self, config_event_start, event_start, config_skip_first_long):
+		InfoBarSeek.__init__(self)
+
+		self["InfoBarSmartSeek"] = HelpableActionMap(
+			self,
+			"InfoBarSmartSeekActions",
+			{
+				"CHANNELUP":	(self.skipForward,	_("Skip forward")),
+				"CHANNELDOWN":	(self.skipBackward,	_("Skip backward")),
+			},
+			prio=-2
+		)
+
+		self.config_event_start = config_event_start
+		self.event_start = event_start
+		self.skip_first = True
+		self.config_skip_first_long = config_skip_first_long
+		self.skip_forward = True
+		self.skip_index = 0
+		self.skip_distance_long = [5 * 60, 60, 10]
+		self.skip_distance_short = [60, 10]
+		self.skip_distance = self.skip_distance_long
+		self.reset_skip_timer = eTimer()
+		self.reset_skip_timer_conn = self.reset_skip_timer.timeout.connect(self.resetSkipTimer)
+
+	def resetSkipTimer(self):
+		self.skip_first = True
+		self.skip_distance = self.skip_distance_long
+		self.skip_index = 0
+		self.skip_forward = True
+
+	def setSkipDistance(self):
+		if self.skip_first and self.config_event_start:
+			logger.debug("position: %s, event_start: %s", self.getPosition(), self.event_start)
+			if abs(self.getPosition() - self.event_start) <= secondsToPts(60):
+				self.skip_distance = self.skip_distance_short
+			else:
+				self.skip_distance = self.skip_distance_long
+
+	def skipForward(self):
+		logger.info("...")
+		self.reset_skip_timer.start(10000, True)
+		self.setSkipDistance()
+		if not self.skip_first and (not self.skip_forward or (self.config_skip_first_long and self.skip_distance == self.skip_distance_long and self.skip_index == 0)):
+			self.skip_index = len(self.skip_distance) - 1 if self.skip_index >= len(self.skip_distance) - 1 else self.skip_index + 1
+		self.skip_forward = True
+		self.doSeekRelative(secondsToPts(self.skip_distance[self.skip_index]))
+		self.skip_first = False
+
+	def skipBackward(self):
+		logger.info("...")
+		self.reset_skip_timer.start(10000, True)
+		self.setSkipDistance()
+		if not self.skip_first and self.skip_forward:
+			self.skip_index = len(self.skip_distance) - 1 if self.skip_index >= len(self.skip_distance) - 1 else self.skip_index + 1
+		self.skip_forward = False
+		self.doSeekRelative(secondsToPts(-self.skip_distance[self.skip_index]))
+		self.skip_first = False

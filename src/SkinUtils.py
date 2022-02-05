@@ -55,6 +55,8 @@ def initPluginSkinPath():
 	default_skin = resolveFilename(SCOPE_SKIN, "Default-FHD/" + PLUGIN)
 	current_skin = resolveFilename(SCOPE_CURRENT_SKIN, PLUGIN)
 	plugin_skin = resolveFilename(SCOPE_PLUGINS, "Extensions/" + PLUGIN)
+	if not os.path.exists(plugin_skin):
+		plugin_skin = resolveFilename(SCOPE_PLUGINS, "SystemPlugins/" + PLUGIN)
 	logger.info("current_skin: %s", current_skin)
 	logger.info("default_skin: %s", default_skin)
 	logger.info("plugin_skin: %s", plugin_skin)

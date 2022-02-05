@@ -137,6 +137,7 @@ class CockpitPlayer(
 			logger.info(" path: %s", path)
 			if os.path.exists(path):
 				self.session.nav.playService(self.service)
+				self.doSeek(secondsToPts(0.1))
 				self.playpauseService()
 			else:
 				self.session.open(

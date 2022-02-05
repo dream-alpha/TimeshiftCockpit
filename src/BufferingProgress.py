@@ -45,10 +45,10 @@ class BufferingProgress(Screen):
 		logger.debug("...")
 		Screen.__init__(self, session)
 		self.skinName = getSkinName("BufferingProgress")
+		self.onShow.append(self.onDialogShow)
 		self.update_timer = eTimer()
 		self.update_timer_conn = self.update_timer.timeout.connect(self.updateBufferingProgress)
-		self.onShow.append(self.onDialogShow)
-		self.pic_index = 0
+		self.spinner_pic_index = 0
 		self.spinner_pics = len(glob.glob(resolveFilename(SCOPE_PLUGINS, "Extensions/TimeshiftCockpit/skin/images/spinner/*.png")))
 		self.spinner_pic_delay = int(BUFFERING * 1000 / self.spinner_pics)
 		self["pic"] = Pixmap()
@@ -59,16 +59,18 @@ class BufferingProgress(Screen):
 
 	def onDialogShow(self):
 		logger.debug("...")
+		self["pic"].instance.setShowHideAnimation("")
+		self.summaries[0]["lcd_pic"].instance.setShowHideAnimation("")
 		self.updateBufferingProgress()
 
 	def updateBufferingProgress(self):
-		logger.debug("...")
-		self.pic_index += 1
-		path = getSkinPath("images/spinner/wait%s.png" % self.pic_index)
+		self.spinner_pic_index += 1
+		path = getSkinPath("images/spinner/wait%s.png" % self.spinner_pic_index)
+		logger.debug("path: %s", path)
 		self["pic"].instance.setPixmap(LoadPixmap(path, cached=False))
 		self.summaries[0]["lcd_pic"].instance.setPixmap(LoadPixmap(path, cached=False))
 
-		if self.pic_index < self.spinner_pics:
+		if self.spinner_pic_index < self.spinner_pics:
 			self.update_timer.start(self.spinner_pic_delay, True)
 		else:
 			self.close()

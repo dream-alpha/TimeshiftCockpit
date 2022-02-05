@@ -28,10 +28,9 @@ from Components.config import config
 from ServiceUtils import getService
 from CockpitPlayer import CockpitPlayer
 from FileUtils import deleteFiles
-from BufferingProgress import BufferingProgress
 from DelayTimer import DelayTimer
 from Tools.BoundFunction import boundFunction
-from BufferingProgress import BUFFERING
+from BufferingProgress import BUFFERING, BufferingProgress
 
 
 class Recording():

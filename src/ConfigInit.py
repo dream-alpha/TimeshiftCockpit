@@ -20,8 +20,9 @@
 
 
 from Debug import logger
-from DebugInit import log_levels
-from Components.config import config, ConfigSelection, ConfigYesNo, ConfigSubsection, NoSave, ConfigNothing
+from Debug import log_levels
+from Components.config import config
+from Components.config import ConfigSelection, ConfigYesNo, ConfigSubsection, NoSave, ConfigNothing
 
 
 class ConfigInit():

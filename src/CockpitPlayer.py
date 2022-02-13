@@ -33,7 +33,7 @@ from Screens.HelpMenu import HelpableScreen
 from ServiceReference import ServiceReference
 from Screens.InfoBarGenerics import InfoBarAudioSelection, InfoBarPVRState, InfoBarShowHide, InfoBarNotifications
 from CockpitSmartSeek import CockpitSmartSeek
-from CockpitCueSheetSupport import CockpitCueSheetSupport
+from CockpitCueSheet import CockpitCueSheet
 from Components.Sources.COCCurrentService import COCCurrentService
 from RecordingUtils import stopRecording
 from MovieInfoEPG import MovieInfoEPG
@@ -53,7 +53,7 @@ class CockpitPlayerSummary(Screen):
 
 
 class CockpitPlayer(
-	Screen, HelpableScreen, InfoBarBase, InfoBarNotifications, CockpitSmartSeek, InfoBarShowHide, InfoBarAudioSelection, InfoBarPVRState, CockpitPVRState, CockpitCueSheetSupport):
+	Screen, HelpableScreen, InfoBarBase, InfoBarNotifications, CockpitSmartSeek, InfoBarShowHide, InfoBarAudioSelection, InfoBarPVRState, CockpitPVRState, CockpitCueSheet):
 
 	ENABLE_RESUME_SUPPORT = False
 	ALLOW_SUSPEND = False
@@ -71,7 +71,7 @@ class CockpitPlayer(
 		CockpitSmartSeek.__init__(self, False, 0, False)
 		InfoBarPVRState.__init__(self)
 		InfoBarNotifications.__init__(self)
-		CockpitCueSheetSupport.__init__(self, service)
+		CockpitCueSheet.__init__(self, service)
 		CockpitPVRState.__init__(self)
 
 		self["Service"] = COCCurrentService(session.nav, self)

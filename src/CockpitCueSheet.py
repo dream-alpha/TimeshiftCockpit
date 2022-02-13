@@ -24,7 +24,7 @@ from Screens.InfoBarGenerics import InfoBarCueSheetSupport
 from CutList import CutList
 
 
-class CockpitCueSheetSupport(InfoBarCueSheetSupport, CutList):
+class CockpitCueSheet(InfoBarCueSheetSupport, CutList):
 
 	def __init__(self, service):
 

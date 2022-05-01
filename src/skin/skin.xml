@@ -97,6 +97,7 @@
 			foregroundColor="yellow" halign="center" position="900,160"
 			render="Label" size="300,40" source="Service" transparent="1">
 			<convert type="COCServicePosition">Length,ShowNoSeconds</convert>
+			<convert type="COCClockToText">InMinutes</convert>
 		</widget>
 
 		<widget backgroundColor="background" font="Regular;34"

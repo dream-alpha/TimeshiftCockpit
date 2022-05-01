@@ -27,7 +27,7 @@ from FileUtils import readFile, writeFile, deleteFile
 class CutList():
 
 	def __init__(self):
-		pass
+		return
 
 	def updateCutList(self, path, play=None, length=None):
 		logger.debug("play: %s, length: %s", play, length)

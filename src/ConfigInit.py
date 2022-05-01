@@ -22,7 +22,7 @@
 from Debug import logger
 from Debug import log_levels
 from Components.config import config
-from Components.config import ConfigSelection, ConfigYesNo, ConfigSubsection, NoSave, ConfigNothing
+from Components.config import ConfigSelection, ConfigYesNo, ConfigSubsection
 
 
 class ConfigInit():
@@ -30,6 +30,5 @@ class ConfigInit():
 	def __init__(self):
 		logger.debug("...")
 		config.plugins.timeshiftcockpit                           = ConfigSubsection()
-		config.plugins.timeshiftcockpit.fake_entry                = NoSave(ConfigNothing())
 		config.plugins.timeshiftcockpit.debug_log_level           = ConfigSelection(default="INFO", choices=log_levels.keys())
 		config.plugins.timeshiftcockpit.enabled                   = ConfigYesNo(default=True)

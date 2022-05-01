@@ -38,7 +38,7 @@ from Components.Sources.COCCurrentService import COCCurrentService
 from RecordingUtils import stopRecording
 from MovieInfoEPG import MovieInfoEPG
 from Components.ServiceEventTracker import ServiceEventTracker, InfoBarBase
-from enigma import eEPGCache, eServiceCenter, iPlayableService
+from enigma import eEPGCache, iPlayableService
 from CutListUtils import ptsToSeconds, secondsToPts
 from SkinUtils import getSkinName
 from CockpitPVRState import CockpitPVRState
@@ -76,7 +76,7 @@ class CockpitPlayer(
 
 		self["Service"] = COCCurrentService(session.nav, self)
 
-		self.__event_tracker = ServiceEventTracker(
+		self._event_tracker = ServiceEventTracker(
 			screen=self,
 			eventmap={
 				iPlayableService.evStart: self.__serviceStarted,
@@ -98,8 +98,6 @@ class CockpitPlayer(
 		self.execing = None
 		self.is_closing = False
 		self.skinName = getSkinName("CockpitPlayer")
-		self.serviceHandler = eServiceCenter.getInstance()
-
 		self.cut_list = []
 		self.events = []
 		self.events_data = []
@@ -111,11 +109,10 @@ class CockpitPlayer(
 		self["lcd_service_name"] = StaticText()
 		self.service_ref = None
 		self.service_started = False
-
 		self.onShown.append(self.__onShow)
 
 	def noOp(self):
-		pass
+		return
 
 	def createSummary(self):
 		return CockpitPlayerSummary
@@ -156,9 +153,7 @@ class CockpitPlayer(
 			if event_data not in self.events_data:
 				self.events_data.append(event_data)
 				self.events.append(event)
-
 		logger.info("ts_pos: %s, events: %s", ts_pos, self.events_data)
-
 		self.event = None
 		self.name = ""
 		self.begin = 0

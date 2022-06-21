@@ -170,6 +170,9 @@ class CockpitPlayer(
 		self["service_name"].setText(self.name)
 		self["lcd_service_name"].setText(self.name)
 
+	def getSeekLength(self):
+		return self.getRecordingPosition()
+
 	def getLength(self):
 		length = 0
 		if self.service_started:

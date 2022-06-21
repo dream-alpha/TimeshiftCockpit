@@ -24,7 +24,10 @@ from Debug import logger
 from Components.ActionMap import HelpableActionMap
 from Screens.InfoBarGenerics import InfoBarSeek
 from enigma import eTimer
-from CutListUtils import secondsToPts
+from CutListUtils import secondsToPts, ptsToSeconds
+
+
+SKIP_TIMEOUT = 5000
 
 
 class CockpitSmartSeek(InfoBarSeek):
@@ -48,8 +51,8 @@ class CockpitSmartSeek(InfoBarSeek):
 		self.config_skip_first_long = config_skip_first_long
 		self.skip_forward = True
 		self.skip_index = 0
-		self.skip_distance_long = [5 * 60, 60, 10]
-		self.skip_distance_short = [60, 10]
+		self.skip_distance_long = [300, 60, 30, 15]
+		self.skip_distance_short = [60, 30, 15]
 		self.skip_distance = self.skip_distance_long
 		self.reset_skip_timer = eTimer()
 		self.reset_skip_timer_conn = self.reset_skip_timer.timeout.connect(self.resetSkipTimer)
@@ -62,28 +65,31 @@ class CockpitSmartSeek(InfoBarSeek):
 
 	def setSkipDistance(self):
 		if self.skip_first and self.config_event_start:
-			logger.debug("position: %s, event_start: %s", self.getPosition(), self.event_start)
+			logger.debug("position: %s, event_start: %s", ptsToSeconds(self.getPosition()), self.event_start)
 			if abs(self.getPosition() - self.event_start) <= secondsToPts(60):
 				self.skip_distance = self.skip_distance_short
 			else:
 				self.skip_distance = self.skip_distance_long
+			logger.debug("skip_distance: %s", self.skip_distance)
 
 	def skipForward(self):
 		logger.info("...")
-		self.reset_skip_timer.start(10000, True)
+		self.reset_skip_timer.start(SKIP_TIMEOUT, True)
 		self.setSkipDistance()
 		if not self.skip_first and (not self.skip_forward or (self.config_skip_first_long and self.skip_distance == self.skip_distance_long and self.skip_index == 0)):
 			self.skip_index = len(self.skip_distance) - 1 if self.skip_index >= len(self.skip_distance) - 1 else self.skip_index + 1
 		self.skip_forward = True
-		self.doSeekRelative(secondsToPts(self.skip_distance[self.skip_index]))
 		self.skip_first = False
+		distance = secondsToPts(self.skip_distance[self.skip_index])
+		self.getSeek().seekRelative(1, distance)
 
 	def skipBackward(self):
 		logger.info("...")
-		self.reset_skip_timer.start(10000, True)
+		self.reset_skip_timer.start(SKIP_TIMEOUT, True)
 		self.setSkipDistance()
 		if not self.skip_first and self.skip_forward:
 			self.skip_index = len(self.skip_distance) - 1 if self.skip_index >= len(self.skip_distance) - 1 else self.skip_index + 1
 		self.skip_forward = False
-		self.doSeekRelative(secondsToPts(-self.skip_distance[self.skip_index]))
 		self.skip_first = False
+		distance = secondsToPts(self.skip_distance[self.skip_index])
+		self.getSeek().seekRelative(-1, distance)

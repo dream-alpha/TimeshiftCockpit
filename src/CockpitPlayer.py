@@ -68,7 +68,7 @@ class CockpitPlayer(
 		InfoBarShowHide.__init__(self)
 		InfoBarBase.__init__(self)
 		InfoBarAudioSelection.__init__(self)
-		CockpitSmartSeek.__init__(self, False, 0, False)
+		CockpitSmartSeek.__init__(self, False, 0, False, True)
 		InfoBarPVRState.__init__(self)
 		InfoBarNotifications.__init__(self)
 		CockpitCueSheet.__init__(self, service)
@@ -90,6 +90,8 @@ class CockpitPlayer(
 				"STOP":		(self.leavePlayer,	_("Stop Timeshift")),
 				"POWER":	(self.leavePlayer,	_("Stop Timeshift")),
 				"INFO":		(self.showMovieInfo,	_("Movie Info")),
+				"NEXT":		(self.nextEvent,	_("Next Event")),
+				"PREVIOUS":	(self.previousEvent,	_("Previous Event")),
 				"HELP":		(self.noOp,		""),
 			},
 			-1
@@ -102,6 +104,7 @@ class CockpitPlayer(
 		self.events = []
 		self.events_data = []
 		self.event = None
+		self.event_index = None
 		self.name = ""
 		self.begin = 0
 		self.duration = 0
@@ -118,7 +121,7 @@ class CockpitPlayer(
 		return CockpitPlayerSummary
 
 	def __serviceStarted(self):
-		logger.info("...")
+		logger.info("SKIP")
 		if not self.is_closing:
 			self.service_started = True
 
@@ -144,6 +147,29 @@ class CockpitPlayer(
 					10
 				)
 
+	def previousEvent(self):
+		logger.info("SKIP2")
+		target = 0
+		self.getEventInfo()
+		if self.event_index:
+			event_data = self.events_data[self.event_index - 1]
+			begin, _duration, _name = event_data
+			target = begin - self.ts_start
+			logger.debug("SKIP2: target: %s", target)
+		self.doSkip(target, 0, ptsToSeconds(self.getRecordingLength()))
+
+	def nextEvent(self):
+		logger.info("SKIP2")
+		self.getEventInfo()
+		target = ptsToSeconds(self.getRecordingLength()) - 5
+		logger.debug("SKIP2: event_index: %s, len(events_data): %s", self.event_index, len(self.events_data))
+		if self.event_index is not None and self.event_index < len(self.events_data) - 1:
+			event_data = self.events_data[self.event_index + 1]
+			begin, _duration, _name = event_data
+			target = begin - self.ts_start
+			logger.debug("SKIP2: target: %s", target)
+		self.doSkip(target, 0, ptsToSeconds(self.getRecordingLength()))
+
 	def getEventInfo(self):
 		logger.info("...")
 		ts_pos = self.ts_start + ptsToSeconds(self.getSeekPosition())
@@ -155,29 +181,45 @@ class CockpitPlayer(
 				self.events.append(event)
 		logger.info("ts_pos: %s, events: %s", ts_pos, self.events_data)
 		self.event = None
+		self.event_index = None
 		self.name = ""
 		self.begin = 0
 		self.duration = 0
 		for i, event_data in enumerate(self.events_data):
 			begin, duration, name = event_data
 			event = self.events[i]
-			if ts_pos > begin:
+			if ts_pos >= begin:
 				self.name = name
 				self.begin = begin
 				self.duration = duration
 				self.event = event
+				self.event_index = i
 		logger.debug("begin: %s, duration: %s, name: %s", datetime.fromtimestamp(self.begin), self.duration, self.name)
 		self["service_name"].setText(self.name)
 		self["lcd_service_name"].setText(self.name)
 
-	def getSeekLength(self):
-		return self.getRecordingPosition()
+	def showPVRStatePic(self, show):
+		self.show_state_pic = show
 
 	def getLength(self):
 		length = 0
 		if self.service_started:
 			length = secondsToPts(self.duration)
 		return length
+
+	def getSeekLength(self):
+		length = 0
+		seek = self.getSeek()
+		if seek and self.service_started:
+			seek_len = seek.getLength()
+			logger.debug("seek.getLength(): %s", seek_len)
+			if not seek_len[0]:
+				length = seek_len[1]
+		logger.info("length: %ss (%s)", ptsToSeconds(length), length)
+		return length
+
+	def getRecordingLength(self):
+		return self.getSeekLength()
 
 	def getRecordingPosition(self):
 		position = 0
@@ -217,7 +259,9 @@ class CockpitPlayer(
 		self.close()
 
 	def doEofInternal(self, playing):
-		logger.info("playing: %s, self.execing: %s", playing, self.execing)
+		logger.info("SKIP: playing: %s, self.execing: %s", playing, self.execing)
 		if self.execing:
-			logger.debug("switching to playback")
-			self.doSeekRelative(secondsToPts(-0.1))
+			logger.debug("switching to playback, seek_state: %s", self.seekstate)
+			self.session.nav.stopService()
+			self.session.nav.playService(self.service)
+			self.recoverEoFFailure()

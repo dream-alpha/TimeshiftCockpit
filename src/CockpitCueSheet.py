@@ -36,7 +36,8 @@ class CockpitCueSheet(InfoBarCueSheetSupport, CutList):
 
 	def getCutList(self):
 		logger.info("cut_list: %s", self.cut_list)
-		return self.cut_list
+#		return self.cut_list
+		return []
 
 	def downloadCuesheet(self):
 		path = self.service.getPath() if self.service else None

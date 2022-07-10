@@ -44,6 +44,7 @@ class CockpitPVRState():
 		self.onPlayStateChanged = [self.playStateChanged]
 		self.pvr_state_dialog = self.session.instantiateDialog(ScreenPVRState)
 		self.pvr_state_dialog.neverAnimate()
+		self.show_state_pic = True
 
 		self.onShow.append(self.mayShow)
 		self.onHide.append(self.pvr_state_dialog.hide)
@@ -53,7 +54,7 @@ class CockpitPVRState():
 		logger.info("state: %s", state)
 		play_state = state[3]
 		logger.debug("play_state: %s", play_state)
-		state_pic = "stop.svg"
+		state_pic = "dvr_stop.svg"
 		factor = ""
 		if play_state == ">":
 			state_pic = "dvr_play.svg"
@@ -77,11 +78,12 @@ class CockpitPVRState():
 		self.pvr_state_dialog["state_pic"].instance.setPixmap(LoadPixmap(getSkinPath("images/dvr_controls/" + state_pic), cached=False, size=eSize(100, 100)))
 		self.pvr_state_dialog["state"].setText(factor)
 
-		logger.debug("seekstate: %s", self.seekstate)
-		if not config.usage.show_infobar_on_skip.value and self.seekstate in (self.SEEK_STATE_PLAY, self.SEEK_STATE_STOP):
+		logger.debug("seekstate: %s, show_state_pic: %s", self.seekstate, self.show_state_pic)
+		if not self.show_state_pic or (not config.usage.show_infobar_on_skip.value and self.seekstate in (self.SEEK_STATE_PLAY, self.SEEK_STATE_STOP)):
 			self.pvr_state_dialog.hide()
 		else:
-			self.mayShow()
+			if self.show_state_pic:
+				self.mayShow()
 
 	def delPvrState(self):
 		logger.info("...")

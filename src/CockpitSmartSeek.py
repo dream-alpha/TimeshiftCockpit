@@ -26,6 +26,7 @@ from Screens.InfoBarGenerics import InfoBarSeek
 from enigma import eTimer
 from CutListUtils import secondsToPts, ptsToSeconds
 from DelayTimer import DelayTimer
+from BoxUtils import getBoxType
 
 
 SKIP_TIMEOUT = 5000  # milliseconds
@@ -34,7 +35,7 @@ STOP_BEFORE_EOF = 5  # seconds
 
 class CockpitSmartSeek(InfoBarSeek):
 
-	def __init__(self, config_event_start, event_start, config_skip_first_long, is_recording):
+	def __init__(self, config_event_start, config_skip_first_long, is_recording):
 		logger.info("SKIP")
 		InfoBarSeek.__init__(self)
 
@@ -49,7 +50,6 @@ class CockpitSmartSeek(InfoBarSeek):
 		)
 
 		self.config_event_start = config_event_start
-		self.event_start = event_start
 		self.skip_first = True
 		self.config_skip_first_long = config_skip_first_long
 		self.is_recording = is_recording
@@ -71,8 +71,9 @@ class CockpitSmartSeek(InfoBarSeek):
 
 	def setSkipDistance(self):
 		if self.skip_first and self.config_event_start:
-			logger.debug("position: %s, event_start: %s", ptsToSeconds(self.getPosition()), self.event_start)
-			if abs(self.getPosition() - self.event_start) <= secondsToPts(60):
+			_before, _offset, _event_length, self.event_start_time, _recording_start_time = self.getEventInfo()
+			logger.debug("position: %s, event_start_time: %s", ptsToSeconds(self.getPosition()), self.event_start_time)
+			if abs(self.event_start_time - self.recording_start_time - ptsToSeconds(self.getSeekPosition())) <= 60:
 				self.skip_distance = self.skip_distance_short
 			else:
 				self.skip_distance = self.skip_distance_long
@@ -125,9 +126,9 @@ class CockpitSmartSeek(InfoBarSeek):
 
 	def recoverEoFFailure(self):
 		logger.info("SKIP: skip_forward: %s, skip_index: %s", self.skip_forward, self.skip_index)
-		self.getLengthPosition()
-		if self.skip_forward:
-			self.skip_first = False
-			self.skip_forward = False
-		length, _position = self.getLengthPosition()
-		self.doSeek(secondsToPts(length - STOP_BEFORE_EOF))
+		length = ptsToSeconds(self.getRecordingLength())
+		logger.debug("target: %s", length - STOP_BEFORE_EOF)
+		if not getBoxType().startswith("dream"):
+			self.doSeek(secondsToPts(length - STOP_BEFORE_EOF))
+		else:
+			self.doSeekRelative(-secondsToPts(STOP_BEFORE_EOF))

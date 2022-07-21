@@ -28,8 +28,9 @@ The installation script will also install a feed source that enables a convenien
 ## Usage
 - Play/pause to start timeshift
 - Stop to stop timeshift
-- Fast forward/backward (left, right)
+- Left/right for fast forward/backward
 - Channel up/down for intelligent jump
+- Tab left/right for previous/next event
 
 ## Links
 - Feed: https://gemfury.com/dream-alpha

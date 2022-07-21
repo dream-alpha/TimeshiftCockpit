@@ -19,6 +19,7 @@
 # <http://www.gnu.org/licenses/>.
 
 
+from __init__ import _
 from Debug import logger
 from Debug import log_levels
 from Components.config import config
@@ -32,3 +33,4 @@ class ConfigInit():
 		config.plugins.timeshiftcockpit                           = ConfigSubsection()
 		config.plugins.timeshiftcockpit.debug_log_level           = ConfigSelection(default="INFO", choices=log_levels.keys())
 		config.plugins.timeshiftcockpit.enabled                   = ConfigYesNo(default=True)
+		config.plugins.timeshiftcockpit.movie_start_position      = ConfigSelection(default="event_start", choices=[("beginning", _("beginning")), ("first_mark", _("first mark")), ("event_start", _("event start"))])

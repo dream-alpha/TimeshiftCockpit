@@ -20,7 +20,6 @@
 
 
 import os
-from time import time
 from datetime import datetime
 from __init__ import _
 from Debug import logger
@@ -31,17 +30,22 @@ from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Screens.HelpMenu import HelpableScreen
 from ServiceReference import ServiceReference
-from Screens.InfoBarGenerics import InfoBarAudioSelection, InfoBarPVRState, InfoBarShowHide, InfoBarNotifications
-from CockpitSmartSeek import CockpitSmartSeek
+from Screens.InfoBarGenerics import InfoBarAudioSelection, InfoBarShowHide, InfoBarNotifications
+from CockpitSeek import CockpitSeek
 from CockpitCueSheet import CockpitCueSheet
+from Components.config import config
 from Components.Sources.COCCurrentService import COCCurrentService
 from RecordingUtils import stopRecording
 from MovieInfoEPG import MovieInfoEPG
 from Components.ServiceEventTracker import ServiceEventTracker, InfoBarBase
 from enigma import eEPGCache, iPlayableService
-from CutListUtils import ptsToSeconds, secondsToPts
+from CutListUtils import ptsToSeconds
 from SkinUtils import getSkinName
 from CockpitPVRState import CockpitPVRState
+from BoxUtils import getBoxType
+
+
+STOP_BEFORE_EOF = 5  # seconds
 
 
 class CockpitPlayerSummary(Screen):
@@ -53,25 +57,23 @@ class CockpitPlayerSummary(Screen):
 
 
 class CockpitPlayer(
-	Screen, HelpableScreen, InfoBarBase, InfoBarNotifications, CockpitSmartSeek, InfoBarShowHide, InfoBarAudioSelection, InfoBarPVRState, CockpitPVRState, CockpitCueSheet):
+	Screen, HelpableScreen, InfoBarBase, InfoBarNotifications, CockpitSeek, InfoBarShowHide, InfoBarAudioSelection, CockpitPVRState, CockpitCueSheet):
 
 	ENABLE_RESUME_SUPPORT = False
 	ALLOW_SUSPEND = False
 
-	def __init__(self, session, service, ts_start):
-
+	def __init__(self, session, service, recording_start_time):
 		self.service = service
-		self.ts_start = ts_start
+		self.recording_start_time = recording_start_time
 
 		Screen.__init__(self, session)
 		HelpableScreen.__init__(self)
 		InfoBarShowHide.__init__(self)
 		InfoBarBase.__init__(self)
 		InfoBarAudioSelection.__init__(self)
-		CockpitSmartSeek.__init__(self, False, 0, False, True)
-		InfoBarPVRState.__init__(self)
 		InfoBarNotifications.__init__(self)
 		CockpitCueSheet.__init__(self, service)
+		CockpitSeek.__init__(self, service, config.plugins.timeshiftcockpit)
 		CockpitPVRState.__init__(self)
 
 		self["Service"] = COCCurrentService(session.nav, self)
@@ -105,9 +107,9 @@ class CockpitPlayer(
 		self.events_data = []
 		self.event = None
 		self.event_index = None
-		self.name = ""
-		self.begin = 0
-		self.duration = 0
+		self.event_name = ""
+		self.event_start_time = 0
+		self.event_length = 0
 		self["service_name"] = Label()
 		self["lcd_service_name"] = StaticText()
 		self.service_ref = None
@@ -134,15 +136,15 @@ class CockpitPlayer(
 		if not self.service_ref:
 			self.service_ref = self.session.nav.getCurrentlyPlayingServiceReference()
 			path = self.service and self.service.getPath()
-			logger.info(" path: %s", path)
+			logger.info("path: %s", path)
 			if os.path.exists(path):
 				self.session.nav.playService(self.service)
-				self.doSeek(secondsToPts(0.1))
+				self.doSeek(0)
 				self.playpauseService()
 			else:
 				self.session.open(
 					MessageBox,
-					_("Movie file does not exist") + "\n" + self.service.getPath(),
+					_("Movie file does not exist") + "\n" + path,
 					MessageBox.TYPE_ERROR,
 					10
 				)
@@ -153,105 +155,60 @@ class CockpitPlayer(
 		self.getEventInfo()
 		if self.event_index:
 			event_data = self.events_data[self.event_index - 1]
-			begin, _duration, _name = event_data
-			target = begin - self.ts_start
+			event_start_time, _event_length, _event_name = event_data
+			target = event_start_time - self.recording_start_time
 			logger.debug("SKIP2: target: %s", target)
 		self.doSkip(target, 0, ptsToSeconds(self.getRecordingLength()))
 
 	def nextEvent(self):
 		logger.info("SKIP2")
 		self.getEventInfo()
-		target = ptsToSeconds(self.getRecordingLength()) - 5
+		target = ptsToSeconds(self.getRecordingLength()) - STOP_BEFORE_EOF
 		logger.debug("SKIP2: event_index: %s, len(events_data): %s", self.event_index, len(self.events_data))
 		if self.event_index is not None and self.event_index < len(self.events_data) - 1:
 			event_data = self.events_data[self.event_index + 1]
-			begin, _duration, _name = event_data
-			target = begin - self.ts_start
+			event_start_time, _event_length, _event_name = event_data
+			target = event_start_time - self.recording_start_time
 			logger.debug("SKIP2: target: %s", target)
 		self.doSkip(target, 0, ptsToSeconds(self.getRecordingLength()))
 
 	def getEventInfo(self):
 		logger.info("...")
-		ts_pos = self.ts_start + ptsToSeconds(self.getSeekPosition())
-		event = eEPGCache.getInstance().lookupEventTime(self.service_ref, -1, 0)
-		if event:
-			event_data = (event.getBeginTime(), event.getDuration(), event.getEventName())
-			if event_data not in self.events_data:
-				self.events_data.append(event_data)
-				self.events.append(event)
-		logger.info("ts_pos: %s, events: %s", ts_pos, self.events_data)
 		self.event = None
 		self.event_index = None
-		self.name = ""
-		self.begin = 0
-		self.duration = 0
-		for i, event_data in enumerate(self.events_data):
-			begin, duration, name = event_data
-			event = self.events[i]
-			if ts_pos >= begin:
-				self.name = name
-				self.begin = begin
-				self.duration = duration
-				self.event = event
-				self.event_index = i
-		logger.debug("begin: %s, duration: %s, name: %s", datetime.fromtimestamp(self.begin), self.duration, self.name)
-		self["service_name"].setText(self.name)
-		self["lcd_service_name"].setText(self.name)
+		self.event_name = ""
+		self.event_start_time = 0
+		self.event_length = 0
+		if self.service_started:
+			recording_position = self.recording_start_time + ptsToSeconds(self.getSeekPosition())
+			event = eEPGCache.getInstance().lookupEventTime(self.service_ref, -1, 0)
+			if event:
+				event_data = (event.getBeginTime(), event.getDuration(), event.getEventName())
+				if event_data not in self.events_data:
+					self.events_data.append(event_data)
+					self.events.append(event)
+			logger.info("recording_position: %s, events: %s", recording_position, self.events_data)
+			for i, event_data in enumerate(self.events_data):
+				event_start_time, event_length, event_name = event_data
+				event = self.events[i]
+				if recording_position >= event_start_time:
+					self.event_name = event_name
+					self.event_start_time = event_start_time
+					self.event_length = event_length
+					self.event = event
+					self.event_index = i
+			before = self.recording_start_time - self.events_data[0][0]
+			offset = 0
+			if self.event_index > 0:
+				offset = self.events_data[self.event_index][0] - self.events_data[0][0] - before
+				before = 0
+			logger.debug("before: %s, offset: %s, event_length: %s, event_start_time: %s, recording_start_time: %s, event_name: %s", before, offset, self.event_length, datetime.fromtimestamp(self.event_start_time), datetime.fromtimestamp(self.recording_start_time), self.event_name)
+			self["service_name"].setText(self.event_name)
+			self["lcd_service_name"].setText(self.event_name)
+		return before, offset, self.event_length, self.event_start_time, self.event_start_time
 
 	def showPVRStatePic(self, show):
 		self.show_state_pic = show
-
-	def getLength(self):
-		length = 0
-		if self.service_started:
-			length = secondsToPts(self.duration)
-		return length
-
-	def getSeekLength(self):
-		length = 0
-		seek = self.getSeek()
-		if seek and self.service_started:
-			seek_len = seek.getLength()
-			logger.debug("seek.getLength(): %s", seek_len)
-			if not seek_len[0]:
-				length = seek_len[1]
-		logger.info("length: %ss (%s)", ptsToSeconds(length), length)
-		return length
-
-	def getRecordingLength(self):
-		return self.getSeekLength()
-
-	def getRecordingPosition(self):
-		position = 0
-		if self.service_started:
-			position = secondsToPts(time() - self.begin)
-		return position
-
-	def getBeforePosition(self):
-		position = 0
-		if self.service_started:
-			if self.ts_start > self.begin:
-				position = secondsToPts(self.ts_start - self.begin)
-		return position
-
-	def getSeekPosition(self):
-		position = 0
-		seek = self.getSeek()
-		if seek and self.service_started:
-			pos = seek.getPlayPosition()
-			if not pos[0]:
-				position = pos[1]
-#		logger.debug("position: %s", ptsToSeconds(position))
-		return position
-
-	def getPosition(self):
-		position = 0
-		if self.service_started:
-			self.getEventInfo()
-			if self.begin:
-				position = secondsToPts(self.ts_start + ptsToSeconds(self.getSeekPosition()) - self.begin)
-#		logger.debug("position: %s", ptsToSeconds(position))
-		return position
 
 	def leavePlayer(self):
 		logger.info("...")
@@ -262,6 +219,7 @@ class CockpitPlayer(
 		logger.info("SKIP: playing: %s, self.execing: %s", playing, self.execing)
 		if self.execing:
 			logger.debug("switching to playback, seek_state: %s", self.seekstate)
-			self.session.nav.stopService()
+			if not getBoxType().startswith("dream"):
+				self.session.nav.stopService()
 			self.session.nav.playService(self.service)
 			self.recoverEoFFailure()

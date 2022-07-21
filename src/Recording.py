@@ -30,7 +30,7 @@ from CockpitPlayer import CockpitPlayer
 from FileUtils import deleteFiles
 from DelayTimer import DelayTimer
 from Tools.BoundFunction import boundFunction
-from BufferingProgress import BufferingProgress, BUFFERING
+from BufferingProgress import BufferingProgress
 
 
 class Recording():
@@ -54,7 +54,7 @@ class Recording():
 			)
 			if timer.state == TimerEntry.StateRunning:
 				logger.debug("REC START for: %s, afterEvent: %s", timer.Filename, timer.afterEvent)
-				ts_start = int(time()) + BUFFERING
+				ts_start = int(time())
 				self.session.openWithCallback(boundFunction(self.doneBufferingProgress, timer.Filename, ts_start), BufferingProgress)
 			elif timer.state in [TimerEntry.StateEnded, TimerEntry.StateWaiting]:
 				logger.debug("REC END for: %s, afterEvent: %s", timer.Filename, timer.afterEvent)

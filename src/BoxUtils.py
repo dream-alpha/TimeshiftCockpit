@@ -19,8 +19,21 @@
 # <http://www.gnu.org/licenses/>.
 
 
-ID = "TSC"
-PLUGIN = "TimeshiftCockpit"
-VERSION = "3.14.4"
-COPYRIGHT = "2018-2022 by dream-alpha"
-LICENSE = "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version."
+import os
+from FileUtils import readFile
+
+
+def getBoxType():
+	box_type = "dm920"
+	if os.path.exists("/proc/stb/info/model"):
+		box_type = readFile("/proc/stb/info/model")
+		box_type = box_type.replace("\n", "")
+		if box_type == "dm525":
+			box_type = "dm520"
+		if box_type == "one":
+			box_type = "dreamone"
+		if box_type == "two":
+			box_type = "dreamtwo"
+		if box_type == "seven":
+			box_type = "dreamseven"
+	return box_type

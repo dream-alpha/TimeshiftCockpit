@@ -29,10 +29,10 @@ class CutList():
 	def __init__(self):
 		return
 
-	def updateCutList(self, path, play=None, length=None):
-		logger.debug("play: %s, length: %s", play, length)
-		if play is not None:
-			cut_list = replaceLast(self.readCutList(path), play)
+	def updateCutList(self, path, last=None, length=None):
+		logger.debug("last: %s, length: %s", last, length)
+		if last is not None:
+			cut_list = replaceLast(self.readCutList(path), last)
 			self.writeCutList(path, cut_list)
 		if length is not None:
 			cut_list = replaceLength(cut_list, length)

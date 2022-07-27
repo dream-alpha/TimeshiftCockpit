@@ -93,7 +93,7 @@ class InfoBar(InfoBarOrg):
 			if len(simulTimerList) > 1:
 				name = simulTimerList[1].name
 				name_date = ' '.join((name, strftime('%c', localtime(simulTimerList[1].begin))))
-				logger.info("timer conflicts with", name_date)
+				logger.info("timer conflicts with: %s", name_date)
 				recording.autoincrease = True	# start with max available length, then increment
 				if recording.setAutoincreaseEnd():
 					self.session.nav.RecordTimer.record(recording)

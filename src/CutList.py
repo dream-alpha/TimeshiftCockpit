@@ -20,8 +20,8 @@
 
 
 from Debug import logger
-from CutListUtils import packCutList, unpackCutList, replaceLast, replaceLength, removeMarks
-from FileUtils import readFile, writeFile, deleteFile
+from CutListUtils import packCutList, unpackCutList, replaceLast, removeMarks
+from FileUtils import readFile, writeFile
 
 
 class CutList():
@@ -29,24 +29,15 @@ class CutList():
 	def __init__(self):
 		return
 
-	def updateCutList(self, path, last=None, length=None):
-		logger.debug("last: %s, length: %s", last, length)
+	def updateCutList(self, path, last=None):
+		logger.debug("last: %s,", last)
 		if last is not None:
 			cut_list = replaceLast(self.readCutList(path), last)
-			self.writeCutList(path, cut_list)
-		if length is not None:
-			cut_list = replaceLength(cut_list, length)
 			self.writeCutList(path, cut_list)
 
 	def removeCutListMarks(self, path):
 		cut_list = removeMarks(self.readCutList(path))
 		self.writeCutList(path, cut_list)
-
-	def deleteCutList(self, path):
-		deleteFile(path + ".cuts")
-
-	def reloadCutList(self, path):
-		return self.readCutList(path)
 
 	def readCutList(self, path):
 		cut_list = []

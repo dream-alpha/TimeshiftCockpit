@@ -33,7 +33,6 @@ from ServiceReference import ServiceReference
 from Screens.InfoBarGenerics import InfoBarAudioSelection, InfoBarShowHide, InfoBarNotifications
 from CockpitSeek import CockpitSeek
 from CockpitCueSheet import CockpitCueSheet
-from Components.config import config
 from Components.Sources.COCCurrentService import COCCurrentService
 from RecordingUtils import stopRecording
 from MovieInfoEPG import MovieInfoEPG
@@ -73,7 +72,7 @@ class CockpitPlayer(
 		InfoBarAudioSelection.__init__(self)
 		InfoBarNotifications.__init__(self)
 		CockpitCueSheet.__init__(self, service)
-		CockpitSeek.__init__(self, service, config.plugins.timeshiftcockpit)
+		CockpitSeek.__init__(self, service, True)
 		CockpitPVRState.__init__(self)
 
 		self["Service"] = COCCurrentService(session.nav, self)

@@ -28,12 +28,11 @@ from CockpitSmartSeek import CockpitSmartSeek
 
 class CockpitSeek(CockpitSmartSeek):
 
-	def __init__(self, service, config_plugins_plugin):
+	def __init__(self, service, event_start):
 		self.service = service
-		self.config_plugins_plugin = config_plugins_plugin
 		self.path = self.service.getPath()
 		self.is_recording = isRecording(self.path)
-		CockpitSmartSeek.__init__(self, config_plugins_plugin.movie_start_position.value == "event_start", True, self.is_recording)
+		CockpitSmartSeek.__init__(self, event_start, True, self.is_recording)
 
 	def getEventInfo(self):
 		logger.debug("not overridden in child class")

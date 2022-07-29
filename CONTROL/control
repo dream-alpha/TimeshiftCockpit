@@ -1,6 +1,6 @@
 Description: TimeshiftCockpit
 Maintainer: dream-alpha
 Package: enigma2-plugin-extensions-timeshiftcockpit
-Version: 3.15.0
+Version: 3.15.2
 Architecture: all
 Depends: enigma2-plugin-systemplugins-cockpitcomponents

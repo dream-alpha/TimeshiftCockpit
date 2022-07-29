@@ -32,6 +32,7 @@ from enigma import eSize
 
 
 class ScreenPVRState(Screen):
+
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		self["state"] = Label()
@@ -39,6 +40,7 @@ class ScreenPVRState(Screen):
 
 
 class CockpitPVRState():
+
 	def __init__(self):
 		self.on_play_state_changed = self.onPlayStateChanged[:]
 		self.onPlayStateChanged = [self.playStateChanged]

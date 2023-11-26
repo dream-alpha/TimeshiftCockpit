@@ -1,0 +1,116 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Common\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-18 17:55+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: dream-alpha\n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 3.3.2\n"
+"X-Loco-Source-Locale: en-US\n"
+"X-Loco-Project-Id: 47158\n"
+"X-Loco-Api-Version: 1.0.19 20180501-1\n"
+"X-Poedit-Basepath: ../src\n"
+"X-Generator: Poedit 2.4.2\n"
+"X-Poedit-SearchPath-0: .\n"
+
+msgid "Stop timeshift"
+msgstr ""
+
+msgid "Power off"
+msgstr ""
+
+msgid "Movie info"
+msgstr ""
+
+msgid "Next event"
+msgstr ""
+
+msgid "Previous event"
+msgstr ""
+
+msgid "Open service list"
+msgstr ""
+
+msgid "Timeshift directory does not exist"
+msgstr ""
+
+msgid "GENERAL"
+msgstr ""
+
+msgid "Enable plugin"
+msgstr ""
+
+msgid "Select whether to enable or disable the plugin."
+msgstr ""
+
+msgid "Permanent timeshift"
+msgstr ""
+
+msgid "Select to enable permanent timeshift."
+msgstr ""
+
+msgid "DEBUG"
+msgstr ""
+
+msgid "Log level"
+msgstr ""
+
+msgid "Select debug log level."
+msgstr ""
+
+msgid "min"
+msgstr ""
+
+msgid "Write error while recording. Disk full?"
+msgstr ""
+
+msgid "Setup"
+msgstr ""
+
+msgid "Open setup"
+msgstr ""
+
+msgid "End"
+msgstr ""
+
+msgid "Skip forward"
+msgstr ""
+
+msgid "Skip backward"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Defaults"
+msgstr ""
+
+msgid "Really close without saving settings?"
+msgstr ""
+
+msgid "Loading default settings will overwrite all settings, really load them?"
+msgstr ""
+
+msgid "Some changes require a GUI restart"
+msgstr ""
+
+msgid "Restart GUI now?"
+msgstr ""
+
+msgid "Bookmarks"
+msgstr ""
+
+msgid "Select directory"
+msgstr ""
+
+msgid "Path does not exist"
+msgstr ""

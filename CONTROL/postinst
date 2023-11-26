@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "***********************************"
+echo "*         TimeshiftCockpit        *"
+echo "*               by                *"
+echo "*          dream-alpha            *"
+echo "***********************************"
+echo ""
+echo "Plugin TimeshiftCockpit installed successfully."
+echo "Please restart DreamOS now!"
+echo ""
+exit 0

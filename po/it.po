@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TimeshiftCockpit v7.0.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-06-04 22:21+0200\n"
+"PO-Revision-Date: 2023-06-04 22:24+0200\n"
+"Last-Translator: Dario Croci <spaeleus@croci.org>\n"
+"Language-Team: Dario Croci <spaeleus@croci.org>\n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.3.1\n"
+"X-Loco-Source-Locale: en-US\n"
+"X-Loco-Project-Id: 47158\n"
+"X-Loco-Api-Version: 1.0.19 20180501-1\n"
+"X-Poedit-Basepath: ../../../../../../../../..\n"
+"X-Generator: Poedit 2.4.2\n"
+"X-Poedit-SearchPath-0: .\n"
+
+msgid "End"
+msgstr "Fine"
+
+msgid "Stop timeshift"
+msgstr "Stop timeshift"
+
+msgid "Power off"
+msgstr "Spegnere"
+
+msgid "Movie info"
+msgstr "Info video"
+
+msgid "Next event"
+msgstr "Evento successivo"
+
+msgid "Previous event"
+msgstr "Evento precedente"
+
+msgid "Open service list"
+msgstr "Aprire elenco canali"
+
+msgid "Timeshift directory does not exist"
+msgstr "Directory Timeshift non presente"
+
+msgid "Skip forward"
+msgstr "Skip avanti"
+
+msgid "Skip backward"
+msgstr "Skip indietro"
+
+msgid "Cancel"
+msgstr "Annullare"
+
+msgid "Save"
+msgstr "Salvare"
+
+msgid "Defaults"
+msgstr "Default"
+
+msgid "Really close without saving settings?"
+msgstr "Chiudere senza salvare le impostazioni?"
+
+msgid "Setup"
+msgstr "Impostazioni"
+
+msgid "Loading default settings will overwrite all settings, really load them?"
+msgstr "Le impostazioni predefinite sovrascriveranno quelle presenti. Eseguire?"
+
+msgid "Some changes require a GUI restart"
+msgstr "Alcune modifiche richiedono il riavvio della GUI"
+
+msgid "Restart GUI now?"
+msgstr "Riavviare la GUI ora?"
+
+msgid "Bookmarks"
+msgstr "Segnalibri"
+
+msgid "Select directory"
+msgstr "Selezionare directory"
+
+msgid "Path does not exist"
+msgstr "Percorso non presente"
+
+msgid "GENERAL"
+msgstr "GENERALE"
+
+msgid "Enable plugin"
+msgstr "Abilitare plugin"
+
+msgid "Select whether to enable or disable the plugin."
+msgstr "Determinare se abilitare/disabilitare il plugin."
+
+msgid "Permanent timeshift"
+msgstr "Permanent timeshift"
+
+msgid "Select to enable permanent timeshift."
+msgstr "Abilitare Permanent Timeshift."
+
+msgid "DEBUG"
+msgstr "DEBUG"
+
+msgid "Log level"
+msgstr "Livello log"
+
+msgid "Select debug log level."
+msgstr "Selezionare livello log di debug."
+
+msgid "min"
+msgstr "min"
+
+msgid "Write error while recording. Disk full?"
+msgstr "Errore scrittura in registrazione. Disco pieno?"
+
+msgid "Open setup"
+msgstr "Impostazioni"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

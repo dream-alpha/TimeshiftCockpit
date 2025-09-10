@@ -1,0 +1,6 @@
+	<screen backgroundColor="background" flags="wfNoBorder" name="TSCTimeshiftOverview" position="center,center" size="1200,820">
+		<xmlinc file="screenpart_TitleOnly" source="Title"/>
+		<xmlinc file="screenpart_Background"/>
+		<xmlinc file="screenpart_TimeshiftOverviewList" position="20,100"/>
+		<xmlinc file="screenpart_4Buttons_name" position="0,eval($screen_height-50)" width="eval($screen_width/$4)"/>
+	</screen>

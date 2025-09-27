@@ -1,0 +1,6 @@
+	<screen name="TSCTimeshiftOverview" position="center,center" size="1800,930">
+		<xmlinc file="screenpart_ColorButtons" position="10,5" width="300"/>
+		<xmlinc file="screenpart_ColorButtonsLabels" position="10,5" width="300"/>
+		<xmlinc file="screenpart_DateTime"/>
+		<xmlinc file="screenpart_TimeshiftOverviewList" position="10,100"/>
+	</screen>

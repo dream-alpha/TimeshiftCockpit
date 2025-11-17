@@ -1,0 +1,14 @@
+	<widget enableWrapAround="1" position="0,0" render="Listbox" scrollbarMode="showOnDemand" size="eval($screen_width-20),560" source="list" transparent="1">
+		<convert type="TemplatedMultiContent">
+			{
+			"template": [
+				MultiContentEntryPixmapAlphaTest(pos=(0,5),size=(120,60),png=0, backcolor=None),
+				MultiContentEntryText(pos=(150,0), size=(400,70), flags=RT_VALIGN_CENTER, text=1),
+				MultiContentEntryText(pos=(570,0), size=(260,70), flags=RT_VALIGN_CENTER, text=2),
+				MultiContentEntryText(pos=(850,0), size=(300,70), flags=RT_VALIGN_CENTER, text=3),
+		],
+			"fonts": [gFont("Regular",30)],
+			"itemHeight":70
+			}
+		</convert>
+	</widget>

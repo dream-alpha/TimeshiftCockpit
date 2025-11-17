@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<skin>
+	<xmlinc file="screen_CockpitPlayer"/>
+	<xmlinc file="screen_ScreenPVRState"/>
+	<xmlinc file="screen_BufferingProgress"/>
+	<xmlinc file="screen_ConfigScreen"/>
+	<xmlinc file="screen_TimeshiftOverview"/>
+</skin>

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+model=$(cat /proc/stb/info/model)
+echo $model
+if [ $model = "one" ] || [ $model = "two" ]; then
+	echo "ONE or TWO"
+	arch="aarch64"
+else
+	echo "DM9xx"
+	arch="armhf"
+fi
+plugin_path=/usr/lib/enigma2/python/Plugins/Extensions/TimeshiftCockpit
+cp $plugin_path/bin/$arch/* $plugin_path/.
+
+echo "***********************************"
+echo "*         TimeshiftCockpit        *"
+echo "*               by                *"
+echo "*          dream-alpha            *"
+echo "***********************************"
+echo ""
+echo "Plugin TimeshiftCockpit installed successfully."
+echo "Please restart DreamOS now!"
+echo ""
+exit 0

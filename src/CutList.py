@@ -26,7 +26,7 @@ class CutList():
     def readCutList(self, path):
         cut_list = []
         logger.debug("path: %s", path)
-        data = readFile(path + ".cuts")
+        data = readFile(path + ".cuts", "rb")
         if data:
             cut_list = unpackCutList(data)
         logger.info("cut_list: %s", cut_list)

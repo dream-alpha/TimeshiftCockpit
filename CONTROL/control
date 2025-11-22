@@ -1,7 +1,7 @@
 Description: TimeshiftCockpit
 Maintainer: dream-alpha
 Package: enigma2-plugin-extensions-timeshiftcockpit
-Version: 0.1.0
+Version: 0.1.1
 Architecture: all
 Conflicts: enigma2-plugin-extensions-permanenttimeshift
 Depends: enigma2-plugin-skincomponents-cockpit, enigma2-plugin-systemplugins-powercockpit, enigma2-plugin-systemplugins-covercockpit, enigma2-plugin-systemplugins-jobcockpit
